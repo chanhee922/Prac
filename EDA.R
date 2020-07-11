@@ -77,18 +77,102 @@ library('maps') # maps
 ############################
 # load data
 ############################
-air_visits <- fread('air_visit_data.csv')
-air_reserve <- fread('air_reserve.csv')
-hpg_reserve <- fread('hpg_reserve.csv')
-air_store <- fread('air_store_info.csv')
-holidays <- fread('date_info.csv')
-store_ids <- fread('store_id_relation.csv')
-test <- fread('sample_submission.csv')
+air_visits <- fread('../air_visit_data.csv')
+air_reserve <- fread('../air_reserve.csv')
+hpg_reserve <- fread('../hpg_reserve.csv')
+air_store <- fread('../air_store_info.csv')
+hpg_store <- fread('../hpg_store_info.csv')
+holidays <- fread('../date_info.csv')
+store_ids <- fread('../store_id_relation.csv')
+test <- fread('../sample_submission.csv')
 
 ############################
 # Overview
 ############################
 
 ### 1. Air Visits
+head(air_visits)
 summary(air_visits)
+str(air_visits)
+air_visits %>% distinct(air_store_id) %>% nrow()
+    # 829
+### 2. Air Reserve
+head(air_reserve)
+summary(air_reserve)
+str(air_reserve)
+air_reserve %>% distinct(air_store_id) %>% nrow()
+    # 314
+### 3. HPG Reserve
+head(hpg_reserve)
+summary(hpg_reserve)
+str(hpg_reserve)
+hpg_reserve %>% distinct(hpg_store_id) %>% nrow()
+    # 13325
+### 4. Air Store
+head(air_store)
+summary(air_store)
+str(air_store)
+### 5. HPG Store
+head(hpg_store)
+summary(hpg_store)
+str(hpg_store)
+
+### 6. Holidays
+head(holidays)
+summary(holidays)
+str(holidays)
+### 7. Store IDs
+head(store_ids)
+summary(store_ids)
+str(store_ids)
+
+### 8. Test data
+head(test)
+summary(test)
+str(test)
+### 9. Missing values
+sum(is.na(air_visits))
+# ...
+sum(is.na(test))
+
+### 10. reformating features
+air_visits <- air_visits %>%
+  mutate(visit_date = ymd(visit_date))
+
+air_reserve <- air_reserve %>%
+  mutate(visit_datetime = ymd_hms(visit_datetime),
+         reserve_datetime = ymd_hms(reserve_datetime))
+
+hpg_reserve <- hpg_reserve %>%
+  mutate(visit_datetime = ymd_hms(visit_datetime),
+         reserve_datetime = ymd_hms(reserve_datetime))
+
+air_store <- air_store %>%
+  mutate(air_genre_name = as.factor(air_genre_name),
+         air_area_name = as.factor(air_area_name))
+
+hpg_store <- hpg_store %>%
+  mutate(hpg_genre_name = as.factor(hpg_genre_name),
+         hpg_area_name = as.factor(hpg_area_name))
+
+holidays <- holidays %>%
+  mutate(holiday_flg = as.logical(holiday_flg),
+         date = ymd(calendar_date),
+         calendar_date = as.character(calendar_date))
+
+############################
+# Individual Feature Visualization
+############################
+
+
+
+
+
+
+
+
+
+
+
+
 
