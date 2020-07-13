@@ -160,9 +160,6 @@ holidays <- holidays %>%
          date = ymd(calendar_date),
          calendar_date = as.character(calendar_date))
 
-############################
-# Individual Feature Visualization
-############################
 
 
 

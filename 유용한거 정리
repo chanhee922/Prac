@@ -1,0 +1,24 @@
+INSIGHTS
+
+1. 멀티플랏 함수 만들어서 한번에 시각화
+  - bsp) layout <- matrix(c(1,1,1,1,2,3,4,4),2,4,byrow=TRUE)
+         multiplot(p1, p2, p3, p4, layout=layout)
+         이렇게 주어지면, 2*4의 레이아웃으로  (byrow=F 면 반대)
+         위에 첫 번째(p1) 플랏이 네번(1,1,1,1)
+         두 번째 플랏(p2)이 2로 오는 방식으로 배치됨.
+
+2. lubridate 패키지를 이용하면 간단하게 날짜 조작 가능 
+  - ymd: year - month - date 순서
+  - ymd_hms: ~ hour - minute - second 순서
+  - diff_hour = 
+    time_length(visit_datetime - reserve_datetime, unit = 'hour')
+    이런 식으로 시간/날짜 차이 구하기 가능(unit에 hour/day 등 지정)
+
+3. leaflet(air_store) %>% 
+  addTiles() %>% 
+  addProviderTiles('CartoDB.Positron') %>% 
+  addMarkers(~longitude, ~latitude, popup= ~air_store_id, label =   ~air_genre_name,
+             clusterOptions = markerClusterOptions())
+    사용해서 지도에 표시
+    지도 테마는 addProviderTiles()에 저장
+    CartoDB.Positron 외에도 다양한 템플릿 있음
