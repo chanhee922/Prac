@@ -7,7 +7,8 @@ pacman::p_load('ggplot2',
                'grid',
                'leaflet',
                'stringr',
-               'tidyr')
+               'tidyr',
+               'forcats')
 
 
 
@@ -332,9 +333,35 @@ holidays %>%
   spread(holiday_flg,n) %>% 
   mutate(frac = `TRUE`/(`TRUE`+`FALSE`))
 
+############################
+############################
 
+  ### 7. Test data set
 
 foo <- air_visits %>% 
-  rename(date = visit_date) %>% 
   distinct(visit_date) %>% 
+  rename(date = visit_date) %>% 
   mutate(dset = 'train')
+
+bar <- test %>% 
+  separate(id, c('foo', 'bar', 'date'), sep = '_') %>% 
+  mutate(date = ymd(date)) %>% 
+  distinct(date) %>% 
+  mutate(dset = 'test')
+
+foo <- foo %>% 
+  bind_rows(bar) %>% 
+  mutate(year = year(date))
+
+year(foo$date) <- 2017
+
+foo %>% 
+  filter(!is.na(date)) %>% 
+  mutate(year = fct_relevel(as.factor(year), c('2017', '2016'))) %>% 
+  ggplot(aes(date, year, color = dset)) +
+  geom_point(shape = '|', size = 10) +
+  scale_x_date(date_labels = '%B', date_breaks = '1 month') +
+  #scale_y+reverse() +
+  theme(legend.position = 'bottom', axis.text.x = element_text(angle = 45, hjust = 1, vjust = 0.9)) +
+  labs(color = 'Data set') +
+  guides(color = guide_legend(override.aes = list(size = 4, pch = 15)))
