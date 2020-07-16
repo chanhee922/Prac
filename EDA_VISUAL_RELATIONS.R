@@ -3,7 +3,9 @@
 ############################
 
 pacman::p_load('dplyr',
-               'ggridges')
+               'ggridges',
+               'ggplot2',
+               'grid')
 
 ############################
 ############################
@@ -78,12 +80,42 @@ multiplot(p1, p2, layout = layout)
 
 ############################
 ############################
-  ### 2. Visitors per genre
+  ### 2. The impact of holidays
+      ## 휴일과 평일의 차이 확인
 
+foo <- air_visits %>% 
+  mutate(calendar_date = as.character(visit_date)) %>% 
+  left_join(holidays, by = 'calendar_date')
 
+p1 <- foo %>% 
+  ggplot(aes(holiday_flg, visitors, color = holiday_flg)) +
+  geom_boxplot() +
+  scale_y_log10() +
+  theme(legend.position =  'none')
 
+p2 <- foo %>% 
+  mutate(wday = lubridate::wday(date, label=T)) %>% 
+  group_by(wday, holiday_flg) %>% 
+  summarise(mean_visitors = mean(visitors)) %>% 
+  ggplot(aes(wday, mean_visitors, color = holiday_flg)) +
+  geom_point(size = 4) +
+  theme(legend.position = 'none') +
+  labs(y = '평균방문객수')
 
+layout <- matrix(c(1,2),1,2,byrow = TRUE)
+multiplot(p1, p2, layout=layout)
 
+      # 왼쪽 차트를 보면 휴일 유무에 따른 방문객 수는 큰 차이가 없어 보인다. 
+      # 숨겨진 세부 정보가 있다.
+      # 
+      # 오른쪽 차트를 보면 휴일이 주말인 경우는 
+      # 방문객 수에 큰 영향을 미치지 않고 감소한 경우도 있다. 
+      # 하지만 휴일이 주중인 경우는 큰 영향을 미치는 걸로 보인다. 
+      # 특히 월요일과 화요일은.
 
+############################
+############################
+  ### 3. Restaurants per area and the effect on visitor numbers
+    ## 휴일과 평일의 차이 확인
 
 
